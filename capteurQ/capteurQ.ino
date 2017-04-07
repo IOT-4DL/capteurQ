@@ -1,3 +1,5 @@
+
+
 /*
   capteurQ
 
@@ -6,7 +8,13 @@
 
   */
 
-// includes
+  /* 
+   * HC-05 will be paired with default PIN : 1234
+   */
+
+SoftwareSerial mySerial(rxPin, txPin); 
+char myChar ; 
+
 #include "DHT.h"
 #include "DigitalPin.h"
 // use software serial port to communicate with bluetooth module hc-05
@@ -14,6 +22,8 @@
 
 // defines
 #define DHTPIN 5     // what digital pin we're connected to
+#define rxPin 13           //for D10
+#define txPin 14           //for D11
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -28,6 +38,8 @@ DigitalPin redLed(3, false, true);    // initial state is off (false), invert tr
 
 // the setup function runs once when you press reset or power on the board
 void setup() {
+  mySerial.begin(9600);
+  mySerial.println("Software Serial...");
   Serial.begin(9600);
   Serial.println("CapteurQ init");
   dht.begin();
@@ -35,6 +47,17 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+  while(mySerial.available())
+  {
+    myChar = mySerial.read();
+    Serial.print(myChar);
+  }
+
+  while(Serial.available())
+  {
+    myChar = Serial.read();
+    mySerial.print(myChar);
+  }
   // Wait a few seconds between measurements.
   delay(5000);
 
