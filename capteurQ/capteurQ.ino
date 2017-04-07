@@ -18,7 +18,6 @@
 #include "SoftwareSerial.h"
 //#include <DHT.h>              //install dht.h and dht.cpp as library (in zip format)
 //#include <SoftwareSerial.h>
-char myChar ; 
 
 // defines
 #define DHTPIN 5     // what digital pin we're connected to
@@ -32,6 +31,7 @@ char myChar ;
 
 DHT dht(DHTPIN, DHTTYPE);
 SoftwareSerial mySerial(rxPin, txPin); 
+char myChar; 
 
 
 DigitalPin PowerLed(13, false, true); // initial state is off (false), invert true = high turns led off
@@ -40,9 +40,10 @@ DigitalPin redLed(3, false, true);    // initial state is off (false), invert tr
 
 // the setup function runs once when you press reset or power on the board
 void setup() {
-  Serial.begin(9600);   
+
   mySerial.begin(9600);
   mySerial.println("Software Serial...");
+  Serial.begin(9600);
   Serial.println("CapteurQ init");
   dht.begin();
 }
