@@ -1,3 +1,5 @@
+
+
 /*
   capteurQ
 
@@ -6,14 +8,21 @@
 
   */
 
-// includes
+  /* 
+   * HC-05 will be paired with default PIN : 1234
+   */
+
 #include "DHT.h"
 #include "DigitalPin.h"
 // use software serial port to communicate with bluetooth module hc-05
 #include "SoftwareSerial.h"
+//#include <DHT.h>              //install dht.h and dht.cpp as library (in zip format)
+//#include <SoftwareSerial.h>
 
 // defines
 #define DHTPIN 5     // what digital pin we're connected to
+#define rxPin 13           //for D10
+#define txPin 14           //for D11
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -21,6 +30,9 @@
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 DHT dht(DHTPIN, DHTTYPE);
+SoftwareSerial mySerial(rxPin, txPin); 
+char myChar; 
+
 
 DigitalPin PowerLed(13, false, true); // initial state is off (false), invert true = high turns led off
 DigitalPin greenLed(2, false, true);  // initial state is off (false), invert true = high turns led off
@@ -28,6 +40,9 @@ DigitalPin redLed(3, false, true);    // initial state is off (false), invert tr
 
 // the setup function runs once when you press reset or power on the board
 void setup() {
+
+  mySerial.begin(9600);
+  mySerial.println("Software Serial...");
   Serial.begin(9600);
   Serial.println("CapteurQ init");
   dht.begin();
@@ -35,6 +50,17 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+  while(mySerial.available())
+  {
+    myChar = mySerial.read();
+    Serial.print(myChar);
+  }
+
+  while(Serial.available())
+  {
+    myChar = Serial.read();
+    mySerial.print(myChar);
+  }
   // Wait a few seconds between measurements.
   delay(5000);
 
@@ -77,3 +103,4 @@ void loop() {
   // power led OFF end of mesure
   PowerLed.off();
 }
+
