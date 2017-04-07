@@ -7,7 +7,7 @@
   */
 
 // includes
-#include <dht.h>
+#include "dht.h"
 
 // defines
 #define DHT11_PIN 5
@@ -15,7 +15,7 @@
 
 dht DHT;
 
-// the setup function runs once when you press reset or power the board
+// the setup function runs once when you press reset or power on the board
 void setup() {
 
 }
