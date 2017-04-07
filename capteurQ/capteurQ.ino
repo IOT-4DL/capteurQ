@@ -7,20 +7,73 @@
   */
 
 // includes
-#include "dht.h"
+#include "DHT.h"
+#include "DigitalPin.h"
+// use software serial port to communicate with bluetooth module hc-05
+#include "SoftwareSerial.h"
 
 // defines
-#define DHT11_PIN 5
-//#define DHT22_PIN 5
+#define DHTPIN 5     // what digital pin we're connected to
 
-dht DHT;
+// Uncomment whatever type you're using!
+//#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+
+DHT dht(DHTPIN, DHTTYPE);
+
+DigitalPin PowerLed(13, false, true); // initial state is off (false), invert true = high turns led off
+DigitalPin greenLed(2, false, true);  // initial state is off (false), invert true = high turns led off
+DigitalPin redLed(3, false, true);    // initial state is off (false), invert true = high turns led off
 
 // the setup function runs once when you press reset or power on the board
 void setup() {
-
+  Serial.begin(9600);
+  Serial.println("CapteurQ init");
+  dht.begin();
 }
 
 // the loop function runs over and over again forever
 void loop() {
+  // Wait a few seconds between measurements.
+  delay(5000);
 
+  // power led ON to indicate we start mesuring
+  PowerLed.on();
+  delay(100);
+  // Reading temperature or humidity takes about 250 milliseconds!
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  float h = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float t = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float f = dht.readTemperature(true);
+
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Compute heat index in Fahrenheit (the default)
+  float hif = dht.computeHeatIndex(f, h);
+  // Compute heat index in Celsius (isFahreheit = false)
+  float hic = dht.computeHeatIndex(t, h, false);
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %\t");
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.print(" *C ");
+  Serial.print(f);
+  Serial.print(" *F\t");
+  Serial.print("Heat index: ");
+  Serial.print(hic);
+  Serial.print(" *C ");
+  Serial.print(hif);
+  Serial.println(" *F");
+
+  // power led OFF end of mesure
+  PowerLed.off();
 }
