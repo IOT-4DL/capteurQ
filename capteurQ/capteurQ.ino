@@ -21,8 +21,8 @@
 
 // defines
 #define DHTPIN 5     // what digital pin we're connected to
-#define rxPin 10           //for D10
-#define txPin 11           //for D11
+#define rxPin 10           //for D10 as TX on board
+#define txPin 11           //for D11 as RX on board
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
