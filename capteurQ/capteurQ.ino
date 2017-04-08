@@ -21,8 +21,8 @@
 
 // defines
 #define DHTPIN 5     // what digital pin we're connected to
-#define rxPin 13           //for D10
-#define txPin 14           //for D11
+#define rxPin 10           //for D10
+#define txPin 11           //for D11
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -61,6 +61,7 @@ void loop() {
     myChar = Serial.read();
     mySerial.print(myChar);
   }
+
   // Wait a few seconds between measurements.
   delay(5000);
 
