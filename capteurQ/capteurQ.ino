@@ -21,8 +21,8 @@
 
 // defines
 #define DHTPIN 5     // what digital pin we're connected to
-#define rxPin 13           //for D10
-#define txPin 14           //for D11
+#define rxPin 10           //for D10 as TX on board
+#define txPin 11           //for D11 as RX on board
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -32,6 +32,8 @@
 DHT dht(DHTPIN, DHTTYPE);
 SoftwareSerial mySerial(rxPin, txPin); 
 char myChar; 
+
+int mq135value;
 
 
 DigitalPin PowerLed(13, false, true); // initial state is off (false), invert true = high turns led off
@@ -50,6 +52,7 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+  //All words typed in the console will be send - This part is only needed to test data sending
   while(mySerial.available())
   {
     myChar = mySerial.read();
@@ -61,9 +64,12 @@ void loop() {
     myChar = Serial.read();
     mySerial.print(myChar);
   }
+
   // Wait a few seconds between measurements.
   delay(5000);
-
+  mq135value = analogRead(0);
+  mySerial.print(mq135value, DEC);                 //data will be send bluetooth by myserial 
+  
   // power led ON to indicate we start mesuring
   PowerLed.on();
   delay(100);
